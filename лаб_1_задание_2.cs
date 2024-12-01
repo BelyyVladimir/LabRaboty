@@ -7,10 +7,8 @@ class lab1
         int x = Convert.ToInt32(Console.ReadLine());
         Console.WriteLine("Впишите 2 число");
         int y = Convert.ToInt32(Console.ReadLine());
-        x = y - x;
-        y = y - x;
-        x = y + x;
-        Console.WriteLine(x);
-        Console.WriteLine(y);
+        x = (x + y) - (Math.Abs(x - y));
+        x = x / 2;
+        Console.WriteLine("Наименьшим оказалось число  " + x);
     }
 }
