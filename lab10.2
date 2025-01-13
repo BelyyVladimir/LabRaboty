@@ -1,0 +1,182 @@
+using System;
+using System.Text;
+
+namespace Lab0612
+{
+    class Student
+    {
+        public string FullName { get; set; }
+        public int BirthYear { get; set; }
+        public int CurrentCourse { get; set; }
+
+        public Student(string fullName, int birthYear, int currentCourse)
+        {
+            FullName = fullName;
+            BirthYear = birthYear;
+            CurrentCourse = currentCourse;
+        }
+
+        public void DisplayInfo()
+        {
+            Console.WriteLine($"ФИО: {FullName}; Год рождения: {BirthYear}; Курс: {CurrentCourse}");
+        }
+
+        public void UpdateDetails(int option)
+        {
+            switch (option)
+            {
+                case 1:
+                    Console.WriteLine("Введите новое ФИО");
+                    FullName = Console.ReadLine();
+                    break;
+                case 2:
+                    Console.WriteLine("Введите новый год рождения");
+                    BirthYear = Convert.ToInt32(Console.ReadLine());
+                    break;
+                case 3:
+                    Console.WriteLine("Введите новый курс");
+                    CurrentCourse = Convert.ToInt32(Console.ReadLine());
+                    break;
+                default:
+                    Console.WriteLine("Неправильный выбор, возвращаемся в меню");
+                    break;
+            }
+        }
+    }
+
+    class Program
+    {
+        static void WaitForContinue()
+        {
+            Console.WriteLine("\nНажмите любую клавишу для продолжения");
+            Console.ReadKey();
+            Console.Clear();
+        }
+
+        static void Main()
+        {
+            Console.OutputEncoding = Console.InputEncoding = Encoding.Unicode;
+
+            Student[] students = new Student[1];
+            bool isEmpty = true;
+            bool shouldExit = false;
+
+            while (!shouldExit)
+            {
+                Console.WriteLine("Выберите опцию от 1 до 5:");
+                Console.WriteLine("\t1. Добавление данных");
+                Console.WriteLine("\t2. Редактирование данных");
+                Console.WriteLine("\t3. Поиск по году рождения");
+                Console.WriteLine("\t4. Поиск по курсу");
+                Console.WriteLine("\t5. Выход");
+
+                int selectedOption = Convert.ToInt32(Console.ReadLine());
+                Console.Clear();
+
+                switch (selectedOption)
+                {
+                    case 1:
+                        if (!isEmpty)
+                        {
+                            Console.WriteLine("Список уже заполнен");
+                            WaitForContinue();
+                            break;
+                        }
+
+                        Console.WriteLine("Введите количество студентов");
+                        int numberOfStudents = Convert.ToInt32(Console.ReadLine());
+                        students = new Student[numberOfStudents];
+
+                        Console.WriteLine("Введите ФИО, год рождения и курс через \"/\" ");
+                        for (int i = 0; i < numberOfStudents; i++)
+                        {
+                            string[] studentData = Console.ReadLine().Split('/');
+                            students[i] = new Student(studentData[0], Convert.ToInt32(studentData[1]), Convert.ToInt32(studentData[2]));
+                        }
+
+                        isEmpty = false;
+                        WaitForContinue();
+                        break;
+
+                    case 2:
+                        if (isEmpty)
+                        {
+                            Console.WriteLine("Список пуст");
+                            WaitForContinue();
+                            break;
+                        }
+
+                        Console.WriteLine("Введите ФИО студента, которого вы хотите редактировать");
+                        string searchedName = Console.ReadLine();
+                        int foundIndex;
+
+                        for (foundIndex = 0; foundIndex < students.Length; foundIndex++)
+                        {
+                            if (students[foundIndex].FullName == searchedName)
+                                break;
+                        }
+
+                        students[foundIndex].DisplayInfo();
+                        Console.WriteLine("Выберите параметр, который хотите изменить");
+                        Console.WriteLine("1. ФИО");
+                        Console.WriteLine("2. Год рождения");
+                        Console.WriteLine("3. Курс");
+
+                        int updateChoice = Convert.ToInt32(Console.ReadLine());
+                        students[foundIndex].UpdateDetails(updateChoice);
+
+                        WaitForContinue();
+                        break;
+
+                    case 3:
+                        if (isEmpty)
+                        {
+                            Console.WriteLine("Список пуст");
+                            WaitForContinue();
+                            break;
+                        }
+
+                        Console.WriteLine("Введите год рождения для поиска");
+                        int searchYear = Convert.ToInt32(Console.ReadLine());
+
+                        foreach (var student in students)
+                        {
+                            if (student.BirthYear == searchYear)
+                            {
+                                student.DisplayInfo();
+                            }
+                        }
+
+                        WaitForContinue();
+                        break;
+
+                    case 4:
+                        if (isEmpty)
+                        {
+                            Console.WriteLine("Список пуст");
+                            WaitForContinue();
+                            break;
+                        }
+
+                        Console.WriteLine("Введите номер курса для поиска");
+                        int searchCourse = Convert.ToInt32(Console.ReadLine());
+
+                        foreach (var student in students)
+                        {
+                            if (student.CurrentCourse == searchCourse)
+                            {
+                                student.DisplayInfo();
+                            }
+                        }
+
+                        WaitForContinue();
+                        break;
+
+                    case 5:
+                        shouldExit = true;
+                        break;
+                }
+            }
+        }
+    }
+}
